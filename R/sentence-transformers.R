@@ -58,12 +58,19 @@ hf_load_sentence_model <- function(model_id, ...) {
 #' }
 hf_sentence_encode <- function(model, text, batch_size = 64L, show_progress_bar = TRUE, tidy = TRUE, ...){
 
-  embedding <-model$encode(text, batch_size = batch_size, show_progress_bar = TRUE, ...)
+  x <- length(text)
+  embedding <- model$encode(text, batch_size = batch_size, show_progress_bar = show_progress_bar, ...)
+
+  if(x == 1){
+    embedding <- t(embedding) %>%
+      as.data.frame()
+  } else{
+    embedding <- as.data.frame(embedding)
+  }
 
   if(tidy){
-    embedding <- embedding %>%
-      as.data.frame() %>%
-      tibble::as_tibble()
+    embedding <- tibble::as_tibble(embedding)
   }
+
   return(embedding)
 }

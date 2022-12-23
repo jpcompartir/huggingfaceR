@@ -2,14 +2,14 @@
 % Please edit documentation in R/transformers.R
 \name{hf_load_tokenizer}
 \alias{hf_load_tokenizer}
-\title{Load an AutoTokenizer from a pre-tained model}
+\title{Load an AutoTokenizer for a pre-trained model from Hugging Face's `transformers` library.}
 \usage{
 hf_load_tokenizer(model_id, ...)
 }
 \arguments{
 \item{model_id}{The id of the model given in the url by https://huggingface.co/model_name.}
 
-\item{...}{sent to the `AutoTokenizer.from_pretained()`, accepts named arguments e.g. use_fast \url{https://huggingface.co/docs/transformers/main_classes/tokenizer}}
+\item{...}{sent to the `AutoTokenizer.from_pretained()` method, accepts named arguments e.g. use_fast \url{https://huggingface.co/docs/transformers/main_classes/tokenizer}}
 }
 \value{
 A Hugging Face model's tokenizer.

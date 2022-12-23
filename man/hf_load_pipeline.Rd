@@ -2,7 +2,7 @@
 % Please edit documentation in R/transformers.R
 \name{hf_load_pipeline}
 \alias{hf_load_pipeline}
-\title{Load a pipeline object from Hugging Face - pipelines usually include a model, tokenizer and task.}
+\title{Load a pipeline object from Hugging Face's `transformers` library - pipelines usually include a model, tokenizer and task.}
 \usage{
 hf_load_pipeline(model_id, tokenizer = NULL, task = NULL, ...)
 }

@@ -8,7 +8,7 @@ hf_pipeline <- function(model_id, tokenizer = NULL, task = NULL, ...) {
 }
 
 
-#' Load a pipeline object from Hugging Face - pipelines usually include a model, tokenizer and task.
+#' Load a pipeline object from Hugging Face's `transformers` library - pipelines usually include a model, tokenizer and task.
 #'
 #' Load Model from Hugging Face
 #'
@@ -35,12 +35,12 @@ hf_load_pipeline <- function(model_id,
 }
 
 
-#' Load an AutoTokenizer from a pre-tained model
+#' Load an AutoTokenizer for a pre-trained model from Hugging Face's `transformers` library.
 #'
 #' Load Tokenizer for Hugging Face Model
 #'
 #' @param model_id The id of the model given in the url by https://huggingface.co/model_name.
-#' @param ... sent to the `AutoTokenizer.from_pretained()`, accepts named arguments e.g. use_fast \url{https://huggingface.co/docs/transformers/main_classes/tokenizer}
+#' @param ... sent to the `AutoTokenizer.from_pretained()` method, accepts named arguments e.g. use_fast \url{https://huggingface.co/docs/transformers/main_classes/tokenizer}
 #'
 #' @returns A Hugging Face model's tokenizer.
 #' @export
@@ -59,8 +59,8 @@ hf_load_tokenizer <- function(model_id, ...) {
 #'
 #' This function currently depends on having a working installation of torch for your GPU in this environment.
 #' If running an Apple silicon GPU, you'll need the native mac M+ build (ARM binary). You will also need rust and other transformers dependencies.
-#' As you need to make sure that everything that needs to be on the GPU (tensors, model, pipeline etc.), is on the GPU, we currently recommend this for advanced users only.
-#' We will be working on integrating this fully with the installation and build of the huggingfaceR environment.
+#' As you need to make sure that everything that needs to be on the GPU (tensors, model, pipeline etc.), is on the GPU, it's safest to use this function within pipelines, setting device there (rather than within a tokenizer, model etc.).
+#'
 #'
 #' @return a device that models, pipelines, and tensors can be sent to.
 #' @export
@@ -75,13 +75,16 @@ hf_set_device <- function(){
     tryCatch({
       #Check that torch is imported, if not report an error - can re-work this to cater for ARM & x86 builds
       if(!"torch" %in% names(reticulate::py)){
-        return("Attempt to set device failed. This function requires torch to be loaded.")
+        hf_torch()
+        if(!"torch" %in% names(reticulate::py)){
+          stop("Attempt to set device failed. This function requires torch to be loaded.")
+        }
       }
 
     }, error = function(e) e)
 
   if ("error" %in% class(result)){
-    return("You'll need a working version of torch in your environment to run this function.")
+    stop("You'll need a working version of torch in your environment to run this function.")
   } else if (reticulate::py$torch$has_cuda){
     return( reticulate::py$torch$device('cuda'))
   } else if (

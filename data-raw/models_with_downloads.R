@@ -33,6 +33,6 @@ models_with_downloads <- all_models %>%
     task = .x$pipeline_tag,
     sha = .x$sha,
     private = .x$private
-  ))
+  ), .progress = TRUE)
 
 usethis::use_data(models_with_downloads, overwrite = TRUE)

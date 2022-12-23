@@ -39,7 +39,7 @@ In this vignette we'll be looking at using tokenizers to ... tokenize(!) batches
 
 ```{r}
   model_id <- "distilbert-base-uncased"
-  tokenizer <- hf_load_tokenizer(model_id)
+  tokenizer <- hf_load_tokenizer(model_id, use_fast = FALSE)
 ```
 
 ## Encoding Text
@@ -69,12 +69,13 @@ If the following warning message begins to spam your console, you can use the co
 
 ```{r}
 library(reticulate)
-
 py_run_string("import os")
 py_run_string("os.environ['TOKENIZERS_PARALLELISM'] = 'false'")
 ```
 
-Alternatively, you could use the argument `use_fast = FALSE` when instantiating the tokenizer.
+Alternatively, you could use the argument `use_fast = FALSE` when instantiating the tokenizer. It's worth noting that use_fast = TRUE will use the Rust programming language to perform the tokenization. 
+
+Or you can use the `hf_stop_token_spam() which executes the code from the code chunk above.
 
 Instead of encoding your text variable, you could have simply called your tokenizer on some text to return the input_ids and attention_mask:
 
@@ -96,6 +97,7 @@ We can avoid this error by using purrr's `map` function.
 ```{r}
 encodings <- map(sentences, tokenizer$encode)
 ```
+
 
 We now have a 720 length list of encoded texts. If we wanted to, we could have created a tibble and used `mutate` and `map` to add a column of encoded texts to our tibble:
 
